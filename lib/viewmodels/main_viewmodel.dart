@@ -16,4 +16,14 @@ class MainViewModel extends ChangeNotifier {
   final SoundManager soundManager;
   final AdManager adManager;
   final PurchaseManager purchaseManager;
+
+  ///
+  Future<void> skipIntro() async {
+    await sharedPrefsRepository.skipIntro();
+  }
+
+  ///
+  Future<bool> isSkipIntroScreen() async {
+    return sharedPrefsRepository.isSkipIntroScreen();
+  }
 }
