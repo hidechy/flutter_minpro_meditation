@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:test_minpro_meditation/screens/home_screen.dart';
 
 import 'di/providers.dart';
 import 'generated/l10n.dart';
+import 'screens/home/home_screen.dart';
 import 'screens/intro/intro_screen.dart';
 import 'viewmodels/main_viewmodel.dart';
 
@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
           }
         },
       ),
+      theme: ThemeData.dark(),
     );
   }
 }

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:provider/provider.dart';
 
-import '../../functions/functions.dart';
+import '../../common/functions/functions.dart';
 import '../../generated/l10n.dart';
 import '../../viewmodels/main_viewmodel.dart';
 
-import '../home_screen.dart';
+import '../home/home_screen.dart';
 
 import 'intro_dialog.dart';
 

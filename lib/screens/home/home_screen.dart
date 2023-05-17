@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../data_models/level.dart';
-import '../data_models/meditation_theme.dart';
-import '../data_models/meditation_time.dart';
-import '../generated/l10n.dart';
-import '../viewmodels/main_viewmodel.dart';
+import '../../data_models/level.dart';
+import '../../data_models/meditation_theme.dart';
+import '../../data_models/meditation_time.dart';
+import '../../data_models/user_settings.dart';
+import '../../generated/l10n.dart';
+import '../../viewmodels/main_viewmodel.dart';
+import 'components/decorated_background.dart';
+import 'components/header_part.dart';
+import 'components/play_button_part.dart';
+import 'components/speed_dial_part.dart';
+import 'components/status_display_part.dart';
+import 'components/volume_slider_part.dart';
 
 List<Level> levelsList = [];
 List<MeditationTheme> meditationThemesList = [];
@@ -26,12 +33,39 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Text(S.of(context).hold),
-          ],
+        child: Selector<MainViewModel, UserSettings?>(
+          selector: (context, viewModel) => viewModel.userSettings,
+          builder: (context, userSettings, child) {
+            return userSettings == null
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      DecoratedBackground(
+                        theme: meditationThemesList[userSettings.themeId],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            HeaderPart(userSettings: userSettings),
+                            const SizedBox(height: 30),
+                            const StatusDisplayPart(),
+                            const SizedBox(height: 30),
+                            const PlayButtonPart(),
+                            const SizedBox(height: 30),
+                            const VolumeSliderPart(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+          },
         ),
       ),
+      floatingActionButton: const SpeedDialPart(),
     );
   }
 

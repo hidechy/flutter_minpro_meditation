@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../common/constants.dart';
+import '../common/functions/functions.dart';
 import '../data_models/user_settings.dart';
-import '../functions/functions.dart';
 import '../models/ad_manager.dart';
 import '../models/purchase_manager.dart';
 import '../models/shared_prefs_repository.dart';
@@ -20,9 +21,16 @@ class MainViewModel extends ChangeNotifier {
   final AdManager adManager;
   final PurchaseManager purchaseManager;
 
-  UserSettings? userSettings;
+  UserSettings userSettings = const UserSettings(
+    isSkipIntroScreen: false,
+    levelId: 0,
+    themeId: 0,
+    timeMinutes: 5,
+  );
 
   int remainingTimeSeconds = 0;
+
+  RunningStatus runningStatus = RunningStatus.BEFORE_START;
 
   ///
   String get remainingTimeString =>
@@ -40,9 +48,9 @@ class MainViewModel extends ChangeNotifier {
 
   ///
   Future<void> getUserSettings() async {
-    userSettings = sharedPrefsRepository.getUserSettings() as UserSettings;
+    userSettings = await sharedPrefsRepository.getUserSettings();
 
-    remainingTimeSeconds = userSettings!.timeMinutes * 60;
+    remainingTimeSeconds = userSettings.timeMinutes * 60;
 
     notifyListeners();
   }
