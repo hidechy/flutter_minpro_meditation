@@ -60,4 +60,10 @@ class MainViewModel extends ChangeNotifier {
     await sharedPrefsRepository.setLevel(index: index);
     await getUserSettings();
   }
+
+  ///
+  Future<void> setTime({required int minutes}) async {
+    await sharedPrefsRepository.setTime(minutes: minutes);
+    await getUserSettings();
+  }
 }

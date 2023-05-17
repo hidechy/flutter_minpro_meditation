@@ -39,4 +39,10 @@ class SharedPrefsRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(PREF_KEY_LEVEL_ID, index);
   }
+
+  ///
+  Future<void> setTime({required int minutes}) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(PREF_KEY_TIME_MINUTES, minutes);
+  }
 }

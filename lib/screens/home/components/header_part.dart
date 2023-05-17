@@ -131,7 +131,7 @@ class HeaderPart extends StatelessWidget {
   void _openTimeSettingDialog() {
     showModalDialog(
       context: _context,
-      dialogWidget: const TimeSettingDialog(),
+      dialogWidget: TimeSettingDialog(),
       isScrollable: false,
     );
   }

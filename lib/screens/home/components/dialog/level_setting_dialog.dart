@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_minpro_meditation/viewmodels/main_viewmodel.dart';
 
 import '../../../../generated/l10n.dart';
+import '../../../../viewmodels/main_viewmodel.dart';
 import '../../home_screen.dart';
 
 class LevelSettingDialog extends StatelessWidget {
