@@ -37,6 +37,9 @@ class MainViewModel extends ChangeNotifier {
       convertTimeFormat(seconds: remainingTimeSeconds);
 
   ///
+  int intervalRemainingSeconds = 0;
+
+  ///
   Future<void> skipIntro() async {
     await sharedPrefsRepository.skipIntro();
   }

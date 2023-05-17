@@ -8,3 +8,10 @@ const timeSettingDialogTextStyle = TextStyle(
   fontSize: 18,
   color: Colors.white,
 );
+
+const statusUpperTextStyle = TextStyle(fontSize: 24);
+
+const statusLowerTextStyle = TextStyle(
+  fontSize: 48,
+  fontWeight: FontWeight.bold,
+);

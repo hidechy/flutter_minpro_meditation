@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, cascade_invocations
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
