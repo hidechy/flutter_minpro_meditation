@@ -122,7 +122,7 @@ class HeaderPart extends StatelessWidget {
   void _openThemeSettingDialog() {
     showModalDialog(
       context: _context,
-      dialogWidget: const ThemeSettingDialog(),
+      dialogWidget: ThemeSettingDialog(),
       isScrollable: true,
     );
   }
