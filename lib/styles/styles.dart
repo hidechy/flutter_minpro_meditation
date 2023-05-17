@@ -15,3 +15,6 @@ const statusLowerTextStyle = TextStyle(
   fontSize: 48,
   fontWeight: FontWeight.bold,
 );
+
+const double largePlayButtonSize = 200;
+const double smallPlayButtonSize = 60;

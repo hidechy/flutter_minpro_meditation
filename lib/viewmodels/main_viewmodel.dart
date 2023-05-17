@@ -75,4 +75,16 @@ class MainViewModel extends ChangeNotifier {
     await sharedPrefsRepository.setTheme(index: index);
     await getUserSettings();
   }
+
+  ///
+  void startMeditation() {}
+
+  ///
+  void resumeMeditation() {}
+
+  ///
+  void resetMeditation() {}
+
+  ///
+  void pauseMeditation() {}
 }
