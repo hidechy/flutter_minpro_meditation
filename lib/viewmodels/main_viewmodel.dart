@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:test_minpro_meditation/models/ad_manager.dart';
-import 'package:test_minpro_meditation/models/purchase_manager.dart';
-import 'package:test_minpro_meditation/models/shared_prefs_repository.dart';
-import 'package:test_minpro_meditation/models/sound_manager.dart';
+
+import '../data_models/user_settings.dart';
+import '../functions/functions.dart';
+import '../models/ad_manager.dart';
+import '../models/purchase_manager.dart';
+import '../models/shared_prefs_repository.dart';
+import '../models/sound_manager.dart';
 
 class MainViewModel extends ChangeNotifier {
   MainViewModel({
@@ -17,6 +20,14 @@ class MainViewModel extends ChangeNotifier {
   final AdManager adManager;
   final PurchaseManager purchaseManager;
 
+  UserSettings? userSettings;
+
+  int remainingTimeSeconds = 0;
+
+  ///
+  String get remainingTimeString =>
+      convertTimeFormat(seconds: remainingTimeSeconds);
+
   ///
   Future<void> skipIntro() async {
     await sharedPrefsRepository.skipIntro();
@@ -25,5 +36,14 @@ class MainViewModel extends ChangeNotifier {
   ///
   Future<bool> isSkipIntroScreen() async {
     return sharedPrefsRepository.isSkipIntroScreen();
+  }
+
+  ///
+  Future<void> getUserSettings() async {
+    userSettings = sharedPrefsRepository.getUserSettings() as UserSettings;
+
+    remainingTimeSeconds = userSettings!.timeMinutes * 60;
+
+    notifyListeners();
   }
 }
