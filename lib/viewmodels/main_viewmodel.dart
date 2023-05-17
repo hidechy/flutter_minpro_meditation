@@ -54,4 +54,10 @@ class MainViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  ///
+  Future<void> setLevel({required int index}) async {
+    await sharedPrefsRepository.setLevel(index: index);
+    await getUserSettings();
+  }
 }

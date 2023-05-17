@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:test_minpro_meditation/common/constants.dart';
 
+import '../../../common/constants.dart';
+import '../../../common/functions/functions.dart';
 import '../../../common/widgets/ripple_widget.dart';
 import '../../../data_models/user_settings.dart';
 import '../../../generated/l10n.dart';
 import '../../../styles/styles.dart';
 import '../../../viewmodels/main_viewmodel.dart';
 import '../home_screen.dart';
+import 'dialog/level_setting_dialog.dart';
+import 'dialog/theme_setting_dialog.dart';
+import 'dialog/time_setting_dialog.dart';
 
 class HeaderPart extends StatelessWidget {
   HeaderPart({super.key, required this.userSettings});
@@ -23,6 +27,8 @@ class HeaderPart extends StatelessWidget {
   ///
   @override
   Widget build(BuildContext context) {
+    _context = context;
+
     return Row(
       children: [
         Expanded(child: levelItem()),
@@ -78,28 +84,57 @@ class HeaderPart extends StatelessWidget {
 
   ///
   Widget timeItem() {
-    return RippleWidget(
-      onTap: () {},
-      child: Column(
-        children: [
-          const Icon(FontAwesomeIcons.stopwatch),
-          const SizedBox(height: 10),
-          Selector<MainViewModel, String>(
-            selector: (context, viewModel) => viewModel.remainingTimeString,
-            builder: (context, remainingTimeString, child) {
-              return Text(remainingTimeString);
-            },
+    return Selector<MainViewModel, RunningStatus>(
+      selector: (context, viewModel) => viewModel.runningStatus,
+      builder: (context, runningStatus, child) {
+        return RippleWidget(
+          onTap: (runningStatus == RunningStatus.BEFORE_START ||
+                  runningStatus == RunningStatus.FINISHED)
+              ? _openTimeSettingDialog
+              : _showSettingCannotToast,
+          child: Column(
+            children: [
+              const Icon(FontAwesomeIcons.stopwatch),
+              const SizedBox(height: 10),
+              Selector<MainViewModel, String>(
+                selector: (context, viewModel) => viewModel.remainingTimeString,
+                builder: (context, remainingTimeString, child) {
+                  return Text(remainingTimeString);
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   ///
-  void _openLevelSettingDialog() {}
+  void _openLevelSettingDialog() {
+    showModalDialog(
+      context: _context,
+      dialogWidget: LevelSettingDialog(),
+      isScrollable: false,
+    );
+  }
 
   ///
-  void _openThemeSettingDialog() {}
+  void _openThemeSettingDialog() {
+    showModalDialog(
+      context: _context,
+      dialogWidget: const ThemeSettingDialog(),
+      isScrollable: true,
+    );
+  }
+
+  ///
+  void _openTimeSettingDialog() {
+    showModalDialog(
+      context: _context,
+      dialogWidget: const TimeSettingDialog(),
+      isScrollable: false,
+    );
+  }
 
   ///
   void _showSettingCannotToast() {
