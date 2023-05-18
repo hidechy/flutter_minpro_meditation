@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../common/constants.dart';
@@ -37,7 +39,7 @@ class MainViewModel extends ChangeNotifier {
       convertTimeFormat(seconds: remainingTimeSeconds);
 
   ///
-  int intervalRemainingSeconds = 0;
+  int intervalRemainingSeconds = INITIAL_INTERVAL;
 
   ///
   double volume = 0;
@@ -80,7 +82,35 @@ class MainViewModel extends ChangeNotifier {
   }
 
   ///
-  void startMeditation() {}
+  void startMeditation() {
+    runningStatus = RunningStatus.ON_START;
+    notifyListeners();
+
+    intervalRemainingSeconds = INITIAL_INTERVAL;
+
+    var cnt = 0;
+
+    Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        cnt++;
+
+        intervalRemainingSeconds = INITIAL_INTERVAL - cnt;
+
+        if (intervalRemainingSeconds <= 0) {
+          timer.cancel();
+
+          _startMeditationTimer();
+        } else if (runningStatus == RunningStatus.PAUSE) {
+          timer.cancel();
+
+          resetMeditation();
+        }
+
+        notifyListeners();
+      },
+    );
+  }
 
   ///
   void resumeMeditation() {}
@@ -89,10 +119,20 @@ class MainViewModel extends ChangeNotifier {
   void resetMeditation() {}
 
   ///
-  void pauseMeditation() {}
+  void pauseMeditation() {
+    runningStatus = RunningStatus.PAUSE;
+    notifyListeners();
+  }
 
   ///
   Future<void> changeVolume({required double newVolume}) async {
     volume = newVolume;
+    notifyListeners();
+  }
+
+  ///
+  void _startMeditationTimer() {
+    runningStatus = RunningStatus.INHALE;
+    notifyListeners();
   }
 }
