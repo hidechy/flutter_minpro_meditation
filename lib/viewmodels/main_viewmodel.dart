@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 
 import '../common/constants.dart';
 import '../common/functions/functions.dart';
+import '../data_models/meditation_theme.dart';
 import '../data_models/user_settings.dart';
 import '../models/ad_manager.dart';
 import '../models/purchase_manager.dart';
 import '../models/shared_prefs_repository.dart';
 import '../models/sound_manager.dart';
+import '../screens/home/home_screen.dart';
 
 class MainViewModel extends ChangeNotifier {
   MainViewModel({
@@ -92,13 +94,17 @@ class MainViewModel extends ChangeNotifier {
 
     Timer.periodic(
       const Duration(seconds: 1),
-      (timer) {
+      (timer) async {
         cnt++;
 
         intervalRemainingSeconds = INITIAL_INTERVAL - cnt;
 
         if (intervalRemainingSeconds <= 0) {
           timer.cancel();
+
+          //
+          await prepareSounds();
+          //
 
           _startMeditationTimer();
         } else if (runningStatus == RunningStatus.PAUSE) {
@@ -109,6 +115,23 @@ class MainViewModel extends ChangeNotifier {
 
         notifyListeners();
       },
+    );
+  }
+
+  ///
+  Future<void> prepareSounds() async {
+    final levelId = userSettings.levelId;
+    final themeId = userSettings.themeId;
+
+    final isNeedBgm = themeId != THEME_ID_SILENCE;
+    final bgmPath = isNeedBgm ? meditationThemesList[themeId].soundPath : null;
+
+    final bellPath = levelsList[levelId].bellPath;
+
+    await soundManager.prepareSounds(
+      bellPath: bellPath,
+      isNeedBgm: isNeedBgm,
+      bgmPath: bgmPath,
     );
   }
 
