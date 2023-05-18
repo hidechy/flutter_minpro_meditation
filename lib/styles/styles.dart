@@ -18,3 +18,5 @@ const statusLowerTextStyle = TextStyle(
 
 const double largePlayButtonSize = 200;
 const double smallPlayButtonSize = 60;
+
+final speedDialLabelBackgroundColor = Colors.purpleAccent.withOpacity(0.4);
