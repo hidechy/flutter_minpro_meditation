@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                             const SizedBox(height: 30),
                             PlayButtonPart(),
                             const SizedBox(height: 30),
-                            const VolumeSliderPart(),
+                            VolumeSliderPart(),
                           ],
                         ),
                       ),

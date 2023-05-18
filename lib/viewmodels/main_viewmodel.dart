@@ -40,6 +40,9 @@ class MainViewModel extends ChangeNotifier {
   int intervalRemainingSeconds = 0;
 
   ///
+  double volume = 0;
+
+  ///
   Future<void> skipIntro() async {
     await sharedPrefsRepository.skipIntro();
   }
@@ -87,4 +90,9 @@ class MainViewModel extends ChangeNotifier {
 
   ///
   void pauseMeditation() {}
+
+  ///
+  Future<void> changeVolume({required double newVolume}) async {
+    volume = newVolume;
+  }
 }
