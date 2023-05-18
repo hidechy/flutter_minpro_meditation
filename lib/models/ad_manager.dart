@@ -23,12 +23,71 @@ class AdManager {
   ///
   void dispose() {
     bannerAd?.dispose();
+    interstitialAd?.dispose();
   }
 
   ///
   void loadBannerAd() {
     bannerAd?.load();
   }
+
+  //---------------------------------------
+
+  InterstitialAd? interstitialAd;
+  int maxFailedToAttempt = 3;
+  int _numOfInterstitialLoadAttempt = 0;
+
+  void initInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          interstitialAd = ad;
+
+          _numOfInterstitialLoadAttempt = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          interstitialAd = null;
+
+          _numOfInterstitialLoadAttempt++;
+
+          if (_numOfInterstitialLoadAttempt <= maxFailedToAttempt) {
+            initInterstitialAd();
+          }
+        },
+      ),
+    );
+  }
+
+  ///
+  void loadInterstitialAd() {
+    _showInterstitialAd();
+  }
+
+  ///
+  void _showInterstitialAd() {
+    if (interstitialAd == null) {
+      return;
+    }
+
+    interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        initInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        ad.dispose();
+        initInterstitialAd();
+      },
+    );
+
+    interstitialAd!.show();
+
+    interstitialAd = null;
+  }
+
+  //---------------------------------------
 
   ///
   static String get appId {

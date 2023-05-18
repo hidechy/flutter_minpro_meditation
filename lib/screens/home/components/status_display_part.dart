@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, cascade_invocations
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -70,10 +70,20 @@ class StatusDisplayPart extends StatelessWidget {
         break;
       case RunningStatus.FINISHED:
         displayText = '';
+
+        loadInterstitialAd();
+
         break;
     }
 
     return displayText;
+  }
+
+  ///
+  void loadInterstitialAd() {
+    final viewModel = _context.read<MainViewModel>();
+
+    viewModel.loadInterstitialAd();
   }
 
   ///

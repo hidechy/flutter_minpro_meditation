@@ -22,7 +22,8 @@ class MainViewModel extends ChangeNotifier {
     adManager
       ..initAdmob()
       ..initBannerAd()
-      ..loadBannerAd();
+      ..loadBannerAd()
+      ..initInterstitialAd();
   }
 
   final SharedPrefsRepository sharedPrefsRepository;
@@ -292,5 +293,10 @@ class MainViewModel extends ChangeNotifier {
     super.dispose();
     soundManager.dispose();
     adManager.dispose();
+  }
+
+  ///
+  void loadInterstitialAd() {
+    adManager.loadInterstitialAd();
   }
 }
