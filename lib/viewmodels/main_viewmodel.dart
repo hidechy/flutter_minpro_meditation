@@ -18,7 +18,12 @@ class MainViewModel extends ChangeNotifier {
     required this.soundManager,
     required this.adManager,
     required this.purchaseManager,
-  });
+  }) {
+    adManager
+      ..initAdmob()
+      ..initBannerAd()
+      ..loadBannerAd();
+  }
 
   final SharedPrefsRepository sharedPrefsRepository;
   final SoundManager soundManager;
@@ -286,5 +291,6 @@ class MainViewModel extends ChangeNotifier {
   void dispose() {
     super.dispose();
     soundManager.dispose();
+    adManager.dispose();
   }
 }

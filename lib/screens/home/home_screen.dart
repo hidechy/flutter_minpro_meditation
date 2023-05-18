@@ -1,5 +1,9 @@
+// ignore_for_file: sized_box_shrink_expand, cascade_invocations
+
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:test_minpro_meditation/models/ad_manager.dart';
 
 import '../../data_models/level.dart';
 import '../../data_models/meditation_theme.dart';
@@ -28,8 +32,11 @@ class HomeScreen extends StatelessWidget {
     meditationThemesList = setMeditationThemes(context);
     meditationTimesList = setMeditationTimes(context);
 
-    final viewModel = context.read<MainViewModel>();
-    Future(viewModel.getUserSettings);
+    Future(() {
+      final viewModel = context.read<MainViewModel>();
+
+      viewModel.getUserSettings();
+    });
 
     return Scaffold(
       body: SafeArea(
@@ -43,9 +50,14 @@ class HomeScreen extends StatelessWidget {
                 : Stack(
                     fit: StackFit.expand,
                     children: [
+                      //
+
                       DecoratedBackground(
                         theme: meditationThemesList[userSettings.themeId],
                       ),
+
+                      //
+
                       Container(
                         padding: const EdgeInsets.all(20),
                         child: Column(
@@ -59,6 +71,27 @@ class HomeScreen extends StatelessWidget {
                             VolumeSliderPart(),
                           ],
                         ),
+                      ),
+
+                      //
+
+                      Selector<MainViewModel, AdManager>(
+                        selector: (context, viewModel) => viewModel.adManager,
+                        builder: (context, adManager, child) {
+                          final bannerAd = adManager.bannerAd;
+                          return Positioned(
+                            bottom: 8,
+                            left: 20,
+                            right: 20,
+                            child: (bannerAd == null)
+                                ? const SizedBox(width: 0, height: 0)
+                                : SizedBox(
+                                    width: bannerAd.size.width.toDouble(),
+                                    height: bannerAd.size.height.toDouble(),
+                                    child: AdWidget(ad: bannerAd),
+                                  ),
+                          );
+                        },
                       ),
                     ],
                   );
