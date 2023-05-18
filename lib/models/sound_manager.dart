@@ -4,7 +4,7 @@ class SoundManager {
   final AudioPlayer _bellPlayer = AudioPlayer();
   final AudioPlayer _bgmPlayer = AudioPlayer();
 
-  AudioPlayer _gongPlayer = AudioPlayer();
+  final AudioPlayer _gongPlayer = AudioPlayer();
 
   double bellVolume = 0.2;
 
@@ -23,5 +23,17 @@ class SoundManager {
       await _bgmPlayer.setLoopMode(LoopMode.one);
       await _bgmPlayer.setVolume(bellVolume);
     }
+  }
+
+  ///
+  Future<void> startBgm({
+    required String bellPath,
+    required bool isNeedBgm,
+    String? bgmPath,
+  }) async {
+    await _bellPlayer.setVolume(bellVolume);
+    await _bellPlayer.play();
+
+    await _bgmPlayer.play();
   }
 }

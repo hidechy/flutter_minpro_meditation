@@ -47,6 +47,9 @@ class MainViewModel extends ChangeNotifier {
   double volume = 0;
 
   ///
+  int timeElapsedInOneCycle = 0;
+
+  ///
   Future<void> skipIntro() async {
     await sharedPrefsRepository.skipIntro();
   }
@@ -136,6 +139,23 @@ class MainViewModel extends ChangeNotifier {
   }
 
   ///
+  Future<void> _startBgm() async {
+    final levelId = userSettings.levelId;
+    final themeId = userSettings.themeId;
+
+    final isNeedBgm = themeId != THEME_ID_SILENCE;
+    final bgmPath = isNeedBgm ? meditationThemesList[themeId].soundPath : null;
+
+    final bellPath = levelsList[levelId].bellPath;
+
+    await soundManager.startBgm(
+      bellPath: bellPath,
+      isNeedBgm: isNeedBgm,
+      bgmPath: bgmPath,
+    );
+  }
+
+  ///
   void resumeMeditation() {}
 
   ///
@@ -155,7 +175,70 @@ class MainViewModel extends ChangeNotifier {
 
   ///
   void _startMeditationTimer() {
-    runningStatus = RunningStatus.INHALE;
+    remainingTimeSeconds = _adjustMeditationTime(remainingTimeSeconds);
+
     notifyListeners();
+
+    timeElapsedInOneCycle = 0;
+
+    _evaluateStatus();
+
+    _startBgm();
+
+    Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        remainingTimeSeconds -= 1;
+
+        if (runningStatus != RunningStatus.BEFORE_START &&
+            runningStatus != RunningStatus.ON_START &&
+            runningStatus != RunningStatus.PAUSE) {
+          _evaluateStatus();
+        }
+
+        notifyListeners();
+      },
+    );
+  }
+
+  ///
+  int _adjustMeditationTime(int remainingTimeSeconds) {
+    final totalInterval = levelsList[userSettings.levelId].totalInterval;
+
+    final remainder = remainingTimeSeconds.remainder(totalInterval);
+
+    if (remainder > (totalInterval / 2)) {
+      return remainingTimeSeconds + (totalInterval - remainder);
+    } else {
+      return remainingTimeSeconds - remainder;
+    }
+  }
+
+  ///
+  void _evaluateStatus() {
+    if (remainingTimeSeconds <= 0) {
+      runningStatus = RunningStatus.FINISHED;
+      return;
+    }
+
+    final inhaleInterval = levelsList[userSettings.levelId].inhaleInterval;
+    final holdInterval = levelsList[userSettings.levelId].holdInterval;
+    final totalInterval = levelsList[userSettings.levelId].totalInterval;
+
+    if (timeElapsedInOneCycle >= 0 && timeElapsedInOneCycle < inhaleInterval) {
+      runningStatus = RunningStatus.INHALE;
+      intervalRemainingSeconds = inhaleInterval - timeElapsedInOneCycle;
+    } else if (timeElapsedInOneCycle < inhaleInterval + holdInterval) {
+      runningStatus = RunningStatus.HOLD;
+      intervalRemainingSeconds =
+          (inhaleInterval + holdInterval) - timeElapsedInOneCycle;
+    } else if (timeElapsedInOneCycle < totalInterval) {
+      runningStatus = RunningStatus.EXHALE;
+      intervalRemainingSeconds = totalInterval - timeElapsedInOneCycle;
+    }
+
+    timeElapsedInOneCycle = (timeElapsedInOneCycle > totalInterval - 1)
+        ? 0
+        : timeElapsedInOneCycle += 1;
   }
 }
