@@ -26,17 +26,19 @@ class SoundManager {
   }
 
   ///
-  Future<void> startBgm({
+  void startBgm({
     required String bellPath,
     required bool isNeedBgm,
     String? bgmPath,
-  }) async {
-    await _bellPlayer.setVolume(bellVolume);
-    await _bellPlayer.seek(Duration.zero);
-    await _bellPlayer.play();
+  }) {
+    _bellPlayer
+      ..setVolume(bellVolume)
+      ..seek(Duration.zero)
+      ..play();
 
-    await _bgmPlayer.seek(Duration.zero);
-    await _bgmPlayer.play();
+    _bgmPlayer
+      ..seek(Duration.zero)
+      ..play();
   }
 
   ///
@@ -45,5 +47,27 @@ class SoundManager {
     if (isNeedBgm) {
       _bgmPlayer.stop();
     }
+  }
+
+  ///
+  Future<void> ringFinalGong() async {
+    await _gongPlayer.setAsset('assets/sounds/gong_sound.mp3');
+    await _gongPlayer.setVolume(bellVolume);
+    await _gongPlayer.play();
+  }
+
+  ///
+  void changeVolume({required double newVolume}) {
+    bellVolume = newVolume / 100;
+    _bellPlayer.setVolume(bellVolume);
+
+    _gongPlayer.setVolume(bellVolume);
+  }
+
+  ///
+  void dispose() {
+    _bellPlayer.dispose();
+    _bgmPlayer.dispose();
+    _gongPlayer.dispose();
   }
 }

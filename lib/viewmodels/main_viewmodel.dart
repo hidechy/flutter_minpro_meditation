@@ -44,13 +44,13 @@ class MainViewModel extends ChangeNotifier {
   int intervalRemainingSeconds = INITIAL_INTERVAL;
 
   ///
-  double volume = 0;
+  double get volume => soundManager.bellVolume * 100;
 
   ///
   int timeElapsedInOneCycle = 0;
 
   ///
-  bool isTimerCanceled = false;
+  bool isTimerCanceled = true;
 
   ///
   Future<void> skipIntro() async {
@@ -140,7 +140,7 @@ class MainViewModel extends ChangeNotifier {
   }
 
   ///
-  Future<void> _startBgm() async {
+  void _startBgm() {
     final levelId = userSettings.levelId;
     final themeId = userSettings.themeId;
 
@@ -149,7 +149,7 @@ class MainViewModel extends ChangeNotifier {
 
     final bellPath = levelsList[levelId].bellPath;
 
-    await soundManager.startBgm(
+    soundManager.startBgm(
       bellPath: bellPath,
       isNeedBgm: isNeedBgm,
       bgmPath: bgmPath,
@@ -189,7 +189,8 @@ class MainViewModel extends ChangeNotifier {
 
   ///
   Future<void> changeVolume({required double newVolume}) async {
-    volume = newVolume;
+    soundManager.changeVolume(newVolume: newVolume);
+
     notifyListeners();
   }
 
@@ -222,11 +223,21 @@ class MainViewModel extends ChangeNotifier {
           timer.cancel();
           isTimerCanceled = true;
           _stopBgm();
+        } else if (runningStatus == RunningStatus.FINISHED) {
+          timer.cancel();
+          isTimerCanceled = true;
+          _stopBgm();
+          _ringFinalGong();
         }
 
         notifyListeners();
       },
     );
+  }
+
+  ///
+  void _ringFinalGong() {
+    soundManager.ringFinalGong();
   }
 
   ///
@@ -268,5 +279,12 @@ class MainViewModel extends ChangeNotifier {
     timeElapsedInOneCycle = (timeElapsedInOneCycle > totalInterval - 1)
         ? 0
         : timeElapsedInOneCycle += 1;
+  }
+
+  ///
+  @override
+  void dispose() {
+    super.dispose();
+    soundManager.dispose();
   }
 }
