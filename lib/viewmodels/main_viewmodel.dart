@@ -105,9 +105,7 @@ class MainViewModel extends ChangeNotifier {
         if (intervalRemainingSeconds <= 0) {
           timer.cancel();
 
-          //
           await prepareSounds();
-          //
 
           _startMeditationTimer();
         } else if (runningStatus == RunningStatus.PAUSE) {
@@ -156,10 +154,27 @@ class MainViewModel extends ChangeNotifier {
   }
 
   ///
-  void resumeMeditation() {}
+  void _stopBgm() {
+    final themeId = userSettings.themeId;
+
+    final isNeedBgm = themeId != THEME_ID_SILENCE;
+
+    soundManager.stopBgm(isNeedBgm: isNeedBgm);
+  }
 
   ///
-  void resetMeditation() {}
+  void resumeMeditation() {
+    _startMeditationTimer();
+  }
+
+  ///
+  void resetMeditation() {
+    runningStatus = RunningStatus.BEFORE_START;
+    intervalRemainingSeconds = INITIAL_INTERVAL;
+    remainingTimeSeconds = userSettings.timeMinutes * 60;
+    timeElapsedInOneCycle = 0;
+    notifyListeners();
+  }
 
   ///
   void pauseMeditation() {
@@ -194,6 +209,11 @@ class MainViewModel extends ChangeNotifier {
             runningStatus != RunningStatus.ON_START &&
             runningStatus != RunningStatus.PAUSE) {
           _evaluateStatus();
+        }
+
+        if (runningStatus == RunningStatus.PAUSE) {
+          timer.cancel();
+          _stopBgm();
         }
 
         notifyListeners();

@@ -32,8 +32,18 @@ class SoundManager {
     String? bgmPath,
   }) async {
     await _bellPlayer.setVolume(bellVolume);
+    await _bellPlayer.seek(Duration.zero);
     await _bellPlayer.play();
 
+    await _bgmPlayer.seek(Duration.zero);
     await _bgmPlayer.play();
+  }
+
+  ///
+  void stopBgm({required bool isNeedBgm}) {
+    _bellPlayer.stop();
+    if (isNeedBgm) {
+      _bgmPlayer.stop();
+    }
   }
 }
