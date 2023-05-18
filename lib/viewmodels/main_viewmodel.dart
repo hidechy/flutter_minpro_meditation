@@ -50,6 +50,9 @@ class MainViewModel extends ChangeNotifier {
   int timeElapsedInOneCycle = 0;
 
   ///
+  bool isTimerCanceled = false;
+
+  ///
   Future<void> skipIntro() async {
     await sharedPrefsRepository.skipIntro();
   }
@@ -178,6 +181,8 @@ class MainViewModel extends ChangeNotifier {
 
   ///
   void pauseMeditation() {
+    isTimerCanceled = false;
+
     runningStatus = RunningStatus.PAUSE;
     notifyListeners();
   }
@@ -203,6 +208,8 @@ class MainViewModel extends ChangeNotifier {
     Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
+        isTimerCanceled = false;
+
         remainingTimeSeconds -= 1;
 
         if (runningStatus != RunningStatus.BEFORE_START &&
@@ -213,6 +220,7 @@ class MainViewModel extends ChangeNotifier {
 
         if (runningStatus == RunningStatus.PAUSE) {
           timer.cancel();
+          isTimerCanceled = true;
           _stopBgm();
         }
 
