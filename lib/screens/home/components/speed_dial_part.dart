@@ -22,36 +22,39 @@ class SpeedDialPart extends StatelessWidget {
 
     return runningStatus != RunningStatus.BEFORE_START
         ? Container()
-        : SpeedDial(
-            animatedIcon: AnimatedIcons.menu_close,
-            backgroundColor: Colors.greenAccent,
-            overlayColor: dialogBackgroundColor,
-            children: [
-              SpeedDialChild(
-                child: const Icon(FontAwesomeIcons.donate),
-                label: S.of(context).donation,
-                labelBackgroundColor: speedDialLabelBackgroundColor,
-                onTap: _donate,
-              ),
-              SpeedDialChild(
-                child: const Icon(FontAwesomeIcons.ad),
-                label: S.of(context).deleteAd,
-                labelBackgroundColor: speedDialLabelBackgroundColor,
-                onTap: _deleteAd,
-              ),
-              SpeedDialChild(
-                child: const Icon(FontAwesomeIcons.subscript),
-                label: S.of(context).subscription,
-                labelBackgroundColor: speedDialLabelBackgroundColor,
-                onTap: _subscribe,
-              ),
-              SpeedDialChild(
-                child: const Icon(FontAwesomeIcons.undo),
-                label: S.of(context).recoverPurchase,
-                labelBackgroundColor: speedDialLabelBackgroundColor,
-                onTap: _recoverPurchase,
-              ),
-            ],
+        : Padding(
+            padding: const EdgeInsets.only(bottom: 60),
+            child: SpeedDial(
+              animatedIcon: AnimatedIcons.menu_close,
+              backgroundColor: Colors.greenAccent,
+              overlayColor: dialogBackgroundColor,
+              children: [
+                SpeedDialChild(
+                  child: const Icon(FontAwesomeIcons.donate),
+                  label: S.of(context).donation,
+                  labelBackgroundColor: speedDialLabelBackgroundColor,
+                  onTap: _donate,
+                ),
+                SpeedDialChild(
+                  child: const Icon(FontAwesomeIcons.ad),
+                  label: S.of(context).deleteAd,
+                  labelBackgroundColor: speedDialLabelBackgroundColor,
+                  onTap: _deleteAd,
+                ),
+                SpeedDialChild(
+                  child: const Icon(FontAwesomeIcons.subscript),
+                  label: S.of(context).subscription,
+                  labelBackgroundColor: speedDialLabelBackgroundColor,
+                  onTap: _subscribe,
+                ),
+                SpeedDialChild(
+                  child: const Icon(FontAwesomeIcons.undo),
+                  label: S.of(context).recoverPurchase,
+                  labelBackgroundColor: speedDialLabelBackgroundColor,
+                  onTap: _recoverPurchase,
+                ),
+              ],
+            ),
           );
   }
 
